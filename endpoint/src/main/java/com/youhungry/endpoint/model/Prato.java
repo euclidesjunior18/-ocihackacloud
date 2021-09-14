@@ -10,7 +10,7 @@ import java.util.Date;
 public class Prato {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private int idprato;
+    private long idprato;
 
     @Column(length = 40, nullable = false)
     private String nome;
@@ -34,7 +34,7 @@ public class Prato {
         this.restaurante = restaurante;
     }
 
-    public int getIdprato() {
+    public long getIdprato() {
         return idprato;
     }
 

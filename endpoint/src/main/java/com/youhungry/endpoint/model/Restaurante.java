@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class Restaurante {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private int idrestaurante;
+    private long idrestaurante;
 
     @Column(length = 60, nullable = false)
     private String nome;
@@ -32,7 +32,7 @@ public class Restaurante {
         this.cnpj = cnpj;
     }
 
-    public int getIdrestaurante() {
+    public long getIdrestaurante() {
         return idrestaurante;
     }
 

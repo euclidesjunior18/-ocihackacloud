@@ -10,7 +10,7 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private int idusuario;
+    private long idusuario;
 
     @Column(length = 60, nullable = false)
     private String email;
@@ -31,7 +31,7 @@ public class Usuario {
         this.nome = nome;
     }
 
-    public int getIdusuario() {
+    public long getIdusuario() {
         return idusuario;
     }
 
