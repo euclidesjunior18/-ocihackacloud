@@ -44,12 +44,26 @@ public class RestauranteController {
                                  @RequestBody Restaurante restaurante) {
         return restauranteRepository.findById(id)
                 .map(record -> {
-                    record.setNome(restaurante.getNome());
-                    record.setPassword(restaurante.getPassword());
-                    record.setCnpj(restaurante.getCnpj());
-                    record.setEspecialidade(restaurante.getEspecialidade());
-                    record.setCidade(restaurante.getCidade());
-                    record.setEndereco(restaurante.getEndereco());
+                    if(restaurante.getNome() != null){
+                        record.setNome(restaurante.getNome());}
+
+                    if(restaurante.getCnpj() != null){
+                        record.setCnpj(restaurante.getCnpj());}
+
+                    if(restaurante.getPassword()!= null){
+                        record.setPassword(restaurante.getPassword());}
+
+                    if(restaurante.getEspecialidade() != null){
+                        record.setEspecialidade(restaurante.getEspecialidade());}
+
+                    if(restaurante.getCidade() != null){
+                        record.setCidade(restaurante.getCidade());}
+
+                    if(restaurante.getEndereco() != null){
+                        record.setEndereco(restaurante.getEndereco());}
+
+                    if(restaurante.getCep() != null){
+                        record.setCep(restaurante.getCep());}
                     Restaurante updated = restauranteRepository.save(record);
                     return ResponseEntity.ok().body(updated);
                 }).orElse(ResponseEntity.notFound().build());

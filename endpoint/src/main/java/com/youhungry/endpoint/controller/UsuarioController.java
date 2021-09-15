@@ -1,93 +1,78 @@
 package com.youhungry.endpoint.controller;
 
-
 import com.youhungry.endpoint.model.Usuario;
 import com.youhungry.endpoint.repository.UsuarioRepository;
-import com.youhungry.endpoint.service.UsuarioService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
-
+@Api("API DE USUARIOS")
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
-    private final UsuarioService usuarioService = UsuarioService.getInstance();
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
+    //select * from
     @GetMapping
-    public List<Usuario> listaUsuario(){
-        UsuarioRepository ur = new UsuarioRepository();
-        return ur.todosUsuarios();
+    public List<Usuario> listarUsuarios(){
+        return usuarioRepository.findAll();
     }
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response createPessoa(Usuario usuario) {
-        Usuario savedUsuario = usuarioService.createUsuario(usuario);
-        return Response.created(URI.create(String.format("/usuarios/%d", savedUsuario.getIdusuario()))).entity(savedUsuario).build();
+    //select com where no ID
+    @GetMapping(path = {"/{id}"})
+    public ResponseEntity findById(@PathVariable long id){
+        return usuarioRepository.findById(id)
+                .map(record -> ResponseEntity.ok().body(record))
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @ApiOperation(
-            value = "Retorna uma usuario apartir do seu ID",
-            produces = MediaType.APPLICATION_JSON)
-    @ApiResponses({
-            @ApiResponse(
-                    code = 200,
-                    message = "Dados do Usuário",
-                    response = Usuario.class
-            ),
-            @ApiResponse(
-                    code = 404,
-                    message = "Usuário não encontrado!"
-            )
-    })
-    @GET
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getUsuario(@PathParam("id") Long id) {
-        Optional<Usuario> usuario = usuarioService.getUsuarioById(id);
-
-        if (usuario.isPresent()) {
-            return Response.ok(usuario).build();
-        }
-
-        return Response.status(Response.Status.NOT_FOUND).build();
+    //insert
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Usuario adicionar(@RequestBody Usuario usuario){
+        return usuarioRepository.save(usuario);
     }
 
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateUsuarios(Usuario usuario) {
-        return Response.ok(usuarioService.updateUsuario(usuario)).build();
+    //update
+    @PutMapping(value="/{id}")
+    public ResponseEntity update(@PathVariable("id") long id,
+                                 @RequestBody Usuario usuario) {
+        return usuarioRepository.findById(id)
+                .map(record -> {
+                    if(usuario.getNome() != null){
+                        record.setNome(usuario.getNome());}
+
+                    if(usuario.getPassword()!= null){
+                        record.setPassword(usuario.getPassword());}
+
+                    if(usuario.getEmail() != null){
+                        record.setEmail(usuario.getEmail());}
+
+                    if(usuario.getCidade() != null){
+                        record.setCidade(usuario.getCidade());}
+
+                    if(usuario.getEndereco() != null){
+                        record.setEndereco(usuario.getEndereco());}
+
+                    if(usuario.getCep() != null){
+                        record.setCep(usuario.getCep());}
+                    Usuario updated = usuarioRepository.save(record);
+                    return ResponseEntity.ok().body(updated);
+                }).orElse(ResponseEntity.notFound().build());
     }
 
-    @DELETE
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteUsuario(@PathParam("id") Long id) {
-        usuarioService.deleteUsuarioById(id);
-        return Response.status(Response.Status.NO_CONTENT).build();
+    //delete
+    @DeleteMapping(path ={"/{id}"})
+    public ResponseEntity <?> delete(@PathVariable long id) {
+        return usuarioRepository.findById(id)
+                .map(record -> {
+                    usuarioRepository.deleteById(id);
+                    return ResponseEntity.ok().build();
+                }).orElse(ResponseEntity.notFound().build());
     }
-
-    @ApiOperation(
-            value = "Retorna a lista de todos os usuários",
-            produces = MediaType.APPLICATION_JSON)
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response todosUsuarios() {
-        return Response.ok(usuarioService.todosUsuarios()).build();
-    }
-
 }

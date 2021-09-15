@@ -23,12 +23,12 @@ public class Prato {
     @OneToOne
     @JoinColumn(name = "idrestaurante",nullable=false)
     private Restaurante restaurante;
-    @Column @Temporal(TemporalType.TIME) // HH:mm:ss
+    @Column @Temporal(TemporalType.TIME) // hh:mm:ss
     private Date tempoParaPreparo;
     @Column
     private String acompanhamento;
     @Column
     private double preco;
-    @Column
+    @Column(length = 200)
     private String url;
 }
