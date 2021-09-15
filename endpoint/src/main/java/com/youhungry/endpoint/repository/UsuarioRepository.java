@@ -37,4 +37,5 @@ public class UsuarioRepository {
     public static UsuarioRepository getInstance() {
         return INSTANCE;
     }
+
 }
