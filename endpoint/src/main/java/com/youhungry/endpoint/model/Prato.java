@@ -31,4 +31,5 @@ public class Prato {
     private double preco;
     @Column(length = 200)
     private String url;
+
 }
