@@ -14,7 +14,7 @@ import java.util.List;
 public class Pedido {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private long idprato;
+    private long idpedido;
 
     private String nomePedido;
     private String descricaoPedido;
