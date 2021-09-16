@@ -1,7 +1,6 @@
 package com.youhungry.endpoint.controller;
 
 import com.youhungry.endpoint.model.Pedido;
-import com.youhungry.endpoint.model.Prato;
 import com.youhungry.endpoint.repository.PedidoRepository;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
